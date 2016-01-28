@@ -1,9 +1,14 @@
 'use strict'
 
 //Constants
-var ARROWS_PATH = './arrows';
-//var ARROWS_TO_LOAD = ['up.png', 'forward.png', 'back.png']; //Load just these images, and rotate / translate them to get other directions
-var ARROWS_TO_LOAD = ['up.png', 'down.png', 'left.png', 'right.png', 'forward.png', 'back.png']; //Load just these images, and rotate / translate them to get other directions
+var CURSORS_PATH = './cursors';
+var CURSORS_TO_LOAD = ['up.png', 'down.png', 'left.png', 'right.png', 'forward.png', 'back.png', 'diag-left.png', 'diag-right.png', 'mag.png']; 
+var CURSORS_ALIASES = ['u','d','l','r','f','b','dl','dr','m'];
+var CURSOR_SIZES_X = {f:'150',};
+var CURSOR_SIZES_Y = {f:'43',};
+var CURSOR_CENTERS_X = {f:'77',};
+var CURSOR_CENTERS_Y = {f:'0',};
+
 var SCENES_PATH = './scenes';
 var SCENES_COUNT = 48;
 
@@ -16,13 +21,15 @@ function Engine(canvasId) {
 	this.canvas = document.getElementById(canvasId);
 	this.ctx = this.canvas.getContext('2d'); 
 	this.canvasBounds = this.canvas.getBoundingClientRect();        
-	this.arrows = [];
+	this.cursors = {};
+	this.scenes = [];	
 	this.cursorX = 0;
 	this.cursorY = 0;
-	this.scenes = [null];	
 	
-	this.curScene = 22; //start
-	this.curArrow = 1;
+	//Initial
+	this.curScene = 0; 
+	this.curCursor = null;	
+	this.curRegion = null;
 	
 	//Start
 	var self = this;
@@ -38,12 +45,12 @@ Engine.prototype.load = function(onComplete) {
 		
 	var self = this;
 	this.loadScenes(function() {	//Recursive loop
-		self.loadArrows(onComplete);
+		self.loadCursors(onComplete);
 	});
 }
 
 Engine.prototype.loadScenes = function(onComplete, i) { //Recursive loading loop
-	if (typeof(i) == 'undefined') i = 1;
+	if (typeof(i) == 'undefined') i = 0;
 	var self = this;
 	var scene = new Image();	
 	scene.onload = function() {
@@ -51,46 +58,63 @@ Engine.prototype.loadScenes = function(onComplete, i) { //Recursive loading loop
 		else self.loadScenes(onComplete, i+1);
 	}
 	
-	scene.src = SCENES_PATH + '/' + ('0000' + i).substr(-4,4) + '.jpg'; //Zero padded names	
+	scene.src = SCENES_PATH + '/' + ('0000' + i).substr(-4,4) + '.jpg'; //Zero padded names		
 	this.scenes.push(scene);
 }
 
-Engine.prototype.loadArrows = function(onComplete, i) {	//Recursive loading loop
+Engine.prototype.loadCursors = function(onComplete, i) {	//Recursive loading loop
 	if (typeof(i) == 'undefined') i = 0;
 	var self = this;
-	var arrow = new Image();  
-	arrow.onload = function() {
-		if (i >= ARROWS_TO_LOAD.length - 1) onComplete();
-		else self.loadArrows(onComplete, i+1);
+	var cursor = new Image();  
+	cursor.onload = function() {
+		if (i >= CURSORS_TO_LOAD.length - 1) onComplete();
+		else self.loadCursors(onComplete, i+1);
 	}	
-	arrow.src = ARROWS_PATH + '/' + ARROWS_TO_LOAD[i]; 
-	this.arrows.push(arrow);
+	cursor.src = CURSORS_PATH + '/' + CURSORS_TO_LOAD[i]; 
+	var cursorAlias = CURSORS_ALIASES[i];
+	this.cursors[cursorAlias] = cursor;
 }
 
 //Events
-Engine.prototype.run = function() {		
-	//this.ctx.strokeText('Running...', CANVAS_SIZE_X / 2, CANVAS_SIZE_Y/2);
+Engine.prototype.run = function() {			
 	this.canvas.addEventListener('click', this.onMouseClick.bind(this));
 	this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
 	window.requestAnimationFrame(this.onDraw.bind(this));
 }
 
+Engine.prototype.getActiveRegion = function(point) {	
+	var regions = nav[this.curScene];	
+	for (var r = 0; r < regions.length; r++) {
+		var region = regions[r];
+		if (inside(point, region.coords)) {
+			this.curRegion = region;
+			this.curCursor = region.cursor;
+			return region;
+		}
+	}
+	this.curCursor = null;
+	return null;
+}
+
+
 Engine.prototype.onMouseClick = function(e) {
 	//Get direction based on position
 	var x = e.clientX - this.canvasBounds.left; 
 	var y = e.clientY - this.canvasBounds.top;  
-		
-	this.curScene = nav[this.curScene].f;
+	
+	if (this.getActiveRegion([x,y])) {	
+		this.curScene = this.curRegion.target;
+	}
+	
 	
 }
 
 Engine.prototype.onMouseMove = function(e) {	
 	var x = e.clientX - this.canvasBounds.left; 
 	var y = e.cursorY = e.clientY - this.canvasBounds.top;  
-	var point = [x, y];
-	var polygon = [[341,639], [413,396], [415,0], [934,1], [879,572], [919,637], [341,639]];
-	if (inside(point, polygon)) this.curArrow = 2;
-	else this.curArrow = 1;
+	
+	this.getActiveRegion([x,y]);
+	
 	this.cursorX = x;
 	this.cursorY = y;
 }
@@ -101,9 +125,12 @@ Engine.prototype.onDraw = function() {
 	var scene = this.scenes[this.curScene];
 	ctx.drawImage(scene, 0, 0, CANVAS_SIZE_X, CANVAS_SIZE_Y);
 	
-	//Draw navigation arrow
-	var arrow = this.arrows[this.curArrow];
-	ctx.drawImage(arrow, this.cursorX - 150, this.cursorY - 100, 100, 50);
+	//Draw navigation cursor
+	if (this.curCursor) {
+		var c = this.curCursor;
+		var cursor = this.cursors[c];
+		ctx.drawImage(cursor, this.cursorX - CURSOR_CENTERS_X[c], this.cursorY - CURSOR_CENTERS_Y[c], CURSOR_SIZES_X[c], CURSOR_SIZES_Y[c]);
+	}
 	
 	window.requestAnimationFrame(this.onDraw.bind(this));
 }
@@ -130,7 +157,7 @@ function inside (point, vs) { //https://github.com/substack/point-in-polygon
 
 
 
-//Engine.prototype.drawArrow(ctx, dir) {}
+//Engine.prototype.drawCursor(ctx, dir) {}
 //End class Engine
 
 var engine = new Engine('canvas'); //Init
