@@ -1,0 +1,14 @@
+<img src="Untitled" width="1024" height="640" border="0" usemap="#map" />
+
+<map name="map">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:gotankersley -->
+<area shape="poly" coords="45,0,120,645,0,645,0,0" target="17" href="l" />
+<area shape="poly" coords="180,639,195,0,0,0,0,645" target="23" href="dl" />
+<area shape="poly" coords="975,0,900,645,1035,645,1035,0" target="15" href="r" />
+<area shape="poly" coords="840,639,855,0,1035,0,1035,645" target="5" href="dr" />
+<area shape="poly" coords="181,0,855,0,855,645,180,645" target="12" href="f" />
+</map>

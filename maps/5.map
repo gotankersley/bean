@@ -1,8 +1,14 @@
-#$-:Image map file created by GIMP Image Map plug-in
-#$-:GIMP Image Map plug-in by Maurits Rijk
-#$-:Please do not edit lines starting with "#$"
-#$VERSION:2.3
-#$TITLE:map
-#$AUTHOR:gotankersley
-#$FORMAT:ncsa
-poly dr 960,0 825,660 1035,660 1035,0 960,0
+<img src="Untitled" width="1024" height="640" border="0" usemap="#map" />
+
+<map name="map">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:gotankersley  -->
+<area shape="poly" coords="210,495,210,645,915,645,915,495" target="9" href="b" />
+<area shape="poly" coords="0,630,210,450,210,645,0,645" target="32" href="dl" />
+<area shape="poly" coords="945,645,1020,0,915,0,915,645" target="1" href="dr" />
+<area shape="poly" coords="210,450,210,0,0,0,0,630" target="6" href="l" />
+<area shape="poly" coords="210,0,210,495,915,495,915,0" target="2" href="f" />
+</map>

@@ -6,7 +6,5 @@
 <!-- #$-:Please do not edit lines starting with "#$" -->
 <!-- #$VERSION:2.3 -->
 <!-- #$AUTHOR:gotankersley -->
-<area shape="poly" coords="0,639,345,525,810,525,1035,645,0,639" target="5" href="b" />
-<area shape="poly" coords="525,0,525,645,0,645,0,0" target="3" href="l" />
-<area shape="poly" coords="525,0,525,645,1035,645,1035,0" target="1" href="r" />
+<area shape="poly" coords="375,555,345,135,705,135,690,555" target="22" href="f" />
 </map>
