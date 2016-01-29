@@ -1,15 +1,15 @@
 'use strict'
 
 //Constants
-var CURSORS_PATH = './cursors';
+var CURSORS_PATH = './cursors/thick';
 var CURSORS_TO_LOAD = ['up.png', 'down.png', 'left.png', 'right.png', 'forward.png', 'back.png', 'diag-left.png', 'diag-right.png', 'mag.png']; 
 var CURSORS_ALIASES = ['u','d','l','r','f','b','dl','dr','m'];
-var CURSOR_SIZES_X = {f:21, l:39, d:21, dr:33, dl:33, b:21, m:150, r:39, u:21};
-var CURSOR_SIZES_Y = {f:39, l:21, d:39, dr:34, dl:34, b:39, m:78, r:21, u:39};
-var CURSOR_CENTERS_X = {f:10, l:0, d:10, dr:34, dl:0, b:0, m:38, r:39, u:10};
-var CURSOR_CENTERS_Y = {f:0, l:10, d:39, dr:0, dl:0, b:10, m:38, r:10, u:0};
+var CURSOR_SIZES_X = {m:150};
+var CURSOR_SIZES_Y = {m:78};
+var CURSOR_CENTERS_X = {f:15, l:0, d:15, dr:45, dl:0, b:13, m:38, r:39, u:15};
+var CURSOR_CENTERS_Y = {f:0, l:16, d:39, dr:0, dl:0, b:26, m:38, r:16, u:0};
 
-var SCENES_PATH = './scenes';
+var SCENES_PATH = './scenes/light';
 var SCENES_COUNT = 48;
 
 var CANVAS_SIZE_X = 1024;
@@ -67,13 +67,18 @@ Engine.prototype.loadScenes = function(onComplete, i) { //Recursive loading loop
 Engine.prototype.loadCursors = function(onComplete, i) {	//Recursive loading loop
 	if (typeof(i) == 'undefined') i = 0;
 	var self = this;
+	var cursorAlias = CURSORS_ALIASES[i];
 	var cursor = new Image();  
 	cursor.onload = function() {
+		if (typeof(CURSOR_SIZES_X[cursorAlias]) != 'undefined') {
+			cursor.width = CURSOR_SIZES_X[cursorAlias];
+			cursor.height = CURSOR_SIZES_Y[cursorAlias];
+		}
 		if (i >= CURSORS_TO_LOAD.length - 1) onComplete();
 		else self.loadCursors(onComplete, i+1);
 	}	
-	cursor.src = CURSORS_PATH + '/' + CURSORS_TO_LOAD[i]; 
-	var cursorAlias = CURSORS_ALIASES[i];
+	cursor.src = CURSORS_PATH + '/' + CURSORS_TO_LOAD[i];
+		
 	this.cursors[cursorAlias] = cursor;
 }
 
@@ -135,7 +140,7 @@ Engine.prototype.onDraw = function() {
 	if (this.curCursor) {
 		var c = this.curCursor;
 		var cursor = this.cursors[c];
-		ctx.drawImage(cursor, this.cursorX - CURSOR_CENTERS_X[c], this.cursorY - CURSOR_CENTERS_Y[c], CURSOR_SIZES_X[c], CURSOR_SIZES_Y[c]);
+		ctx.drawImage(cursor, this.cursorX - CURSOR_CENTERS_X[c], this.cursorY - CURSOR_CENTERS_Y[c], cursor.width, cursor.height);
 	}
 	
 	window.requestAnimationFrame(this.onDraw.bind(this));
