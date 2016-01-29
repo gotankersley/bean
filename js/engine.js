@@ -4,10 +4,10 @@
 var CURSORS_PATH = './cursors';
 var CURSORS_TO_LOAD = ['up.png', 'down.png', 'left.png', 'right.png', 'forward.png', 'back.png', 'diag-left.png', 'diag-right.png', 'mag.png']; 
 var CURSORS_ALIASES = ['u','d','l','r','f','b','dl','dr','m'];
-var CURSOR_SIZES_X = {f:150, l:75, d:150, dr:150, dl:150, b:150, m:150, r:75, u:150};
-var CURSOR_SIZES_Y = {f:43, l:150, d:75, dr:53, dl:53, b:47, m:78, r:150, u:75};
-var CURSOR_CENTERS_X = {f:77, l:0, d:75, dr:88, dl:60, b:75, m:38, r:75, u:75};
-var CURSOR_CENTERS_Y = {f:0, l:75, d:75, dr:0, dl:0, b:44, m:38, r:75, u:0};
+var CURSOR_SIZES_X = {f:21, l:39, d:21, dr:33, dl:33, b:21, m:150, r:39, u:21};
+var CURSOR_SIZES_Y = {f:39, l:21, d:39, dr:34, dl:34, b:39, m:78, r:21, u:39};
+var CURSOR_CENTERS_X = {f:10, l:0, d:10, dr:34, dl:0, b:0, m:38, r:39, u:10};
+var CURSOR_CENTERS_Y = {f:0, l:10, d:39, dr:0, dl:0, b:10, m:38, r:10, u:0};
 
 var SCENES_PATH = './scenes';
 var SCENES_COUNT = 48;
